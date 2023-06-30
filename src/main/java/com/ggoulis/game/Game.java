@@ -6,19 +6,31 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
 
 import com.almasb.fxgl.app.scene.StartupScene;
+import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.PhysicsWorld;
 import com.sun.media.jfxmedia.logging.Logger;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
 public class Game extends GameApplication {
 
     private Entity player;
+    private Text uiText;
     private PlayerComponent playerComponent;
+
+    private UIManager uiManager;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -48,6 +60,28 @@ public class Game extends GameApplication {
         getGameWorld().addEntityFactory(new GameEntityFactory());
         player = getGameWorld().spawn("player");
         playerComponent = player.getComponent(PlayerComponent.class);
+
+        getGameTimer().runAtInterval(() -> {
+
+            int numEnemies = geti("enemies");
+
+            if (numEnemies < 5) {
+                spawn("enemy",
+                        FXGLMath.random(0, getAppWidth() - 40),
+                        FXGLMath.random(0, getAppHeight() / 2 - 40)
+                );
+
+                inc("enemies", +1);
+            }
+
+        }, Duration.seconds(1));
+
+    }
+
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("enemies", 0);
     }
 
     @Override
@@ -92,7 +126,6 @@ public class Game extends GameApplication {
             @Override
             protected void onAction() {
                 playerComponent.left();
-                System.out.println("GOING Down");
             }
 
             @Override
@@ -101,11 +134,42 @@ public class Game extends GameApplication {
             }
         }, KeyCode.A);
 
+        getInput().addAction(new UserAction("Shoot") {
+            @Override
+            protected void onActionBegin() {
+                getGameWorld().spawn("bullet", getInput().getMouseXWorld(), getAppHeight() - 10);
+            }
+        }, MouseButton.PRIMARY);
+
     }
 
     @Override
     protected void initPhysics() {
-        getPhysicsWorld().setGravity(0, 0);
+        PhysicsWorld physicsWorld = getPhysicsWorld();
+
+        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.BULLET, EntityType.ENEMY) {
+            @Override
+            protected void onCollisionBegin(Entity bullet, Entity enemy) {
+                bullet.removeFromWorld();
+                enemy.removeFromWorld();
+
+                inc("enemies", -1);
+            }
+        });
+    }
+
+    @Override
+    protected void initUI() {
+        uiManager = new UIManager(getGameScene(), player);
+
+        uiManager.drawHealthBar();
+
+        uiManager.setVisible(true);
+    }
+
+    @Override
+    protected void onUpdate(double tpf) {
+//        uiManager.updateUI();
     }
 
     public static void main(String[] args) {
