@@ -8,6 +8,8 @@ import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.level.Level;
+import com.almasb.fxgl.entity.level.text.TextLevelLoader;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
@@ -36,6 +38,7 @@ public class Game extends GameApplication {
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setWidth(800);
         gameSettings.setHeight(800);
+
         gameSettings.setSceneFactory(new SceneFactory() {
             @NotNull
             @Override
@@ -53,10 +56,16 @@ public class Game extends GameApplication {
 
     @Override
     protected void initGame() {
-
         getGameWorld().addEntityFactory(new GameEntityFactory());
-        player = getGameWorld().spawn("player");
+
+
+        Level level = getAssetLoader().loadLevel("level.txt", new TextLevelLoader(30, 30, '0'));
+
+        getGameWorld().setLevel(level);
+
+        player = getGameWorld().spawn("player", getAppHeight() / 2, getAppWidth() / 2);
         playerComponent = player.getComponent(PlayerComponent.class);
+        getGameScene().getViewport().bindToEntity(player, getAppHeight() / 2, getAppWidth() / 2);
 
         getGameTimer().runAtInterval(() -> {
 
@@ -146,6 +155,7 @@ public class Game extends GameApplication {
     @Override
     protected void initPhysics() {
         PhysicsWorld physicsWorld = getPhysicsWorld();
+        physicsWorld.setGravity(0, 0);
 
         physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.BULLET, EntityType.ENEMY) {
             @Override

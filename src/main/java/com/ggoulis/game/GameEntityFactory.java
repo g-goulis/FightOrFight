@@ -13,6 +13,7 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.entityBuilder;
@@ -22,7 +23,7 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("player")
     public Entity newPlayer(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.KINEMATIC);
+        physics.setBodyType(BodyType.DYNAMIC);
 //        physics.setFixtureDef(new FixtureDef().density(0.3f).restitution(1.0f));
 //        physics.setOnPhysicsInitialized(() -> physics.setLinearVelocity(5 * 60, -5 * 60));
 
@@ -30,8 +31,8 @@ public class GameEntityFactory implements EntityFactory {
                 .from(data)
                 .type(EntityType.PLAYER)
                 .viewWithBBox(new Rectangle(20, 60, Color.LIGHTGRAY))
-                .with(new CollidableComponent(true))
                 .with(physics)
+                .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
                 .build();
     }
@@ -54,12 +55,38 @@ public class GameEntityFactory implements EntityFactory {
 
     @Spawns("enemy")
     public Entity newEnemy(SpawnData data) {
+
         return entityBuilder(data)
                 .type(EntityType.ENEMY)
                 .viewWithBBox(new Rectangle(40, 40, Color.RED))
                 .with(new CollidableComponent(true))
+                .with(new PhysicsComponent())
                 .build();
     }
 
+
+    @Spawns("r,rect,type1")
+    public Entity newRectangle(SpawnData data) {
+
+        return entityBuilder(data)
+                .viewWithBBox(new Rectangle(30, 30))
+                .with(new PhysicsComponent())
+                .with(new CollidableComponent(true))
+                .build();
+    }
+
+    @Spawns("")
+    public Entity newEmpty(SpawnData data) {
+        return entityBuilder(data)
+                .view(new Rectangle(30, 30, Color.RED))
+                .build();
+    }
+
+    @Spawns("c,circle,type2,type3")
+    public Entity newCircle(SpawnData data) {
+        return entityBuilder(data)
+                .view(new Circle(15, 15, 15))
+                .build();
+    }
 
 }

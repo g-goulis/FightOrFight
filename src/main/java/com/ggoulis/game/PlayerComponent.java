@@ -10,6 +10,9 @@ public class PlayerComponent extends Component {
 
     private static final double PLAYER_SPEED = 420;
 
+    private int health = 100;
+    private int damage = 10;
+
     private PhysicsComponent physics;
 
     public void up() {

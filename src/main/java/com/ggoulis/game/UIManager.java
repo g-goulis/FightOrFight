@@ -1,6 +1,7 @@
 package com.ggoulis.game;
 
 import com.almasb.fxgl.app.scene.GameScene;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -9,6 +10,9 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getAppHeight;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getAppWidth;
 
 public class UIManager {
 //    Rectangle healthBar;
@@ -28,14 +32,14 @@ public class UIManager {
     }
 
 
-    public void updateUI() {
-        updateZ();
-        gameScene.getUINodes().forEach(node -> {
-            node.setLayoutX(player.getRightX() - (HEALTH_BAR_WIDTH / 2));
-            node.setLayoutY(player.getBottomY() - 10);
-        });
-
-    }
+//    public void updateUI() {
+//        updateZ();
+//        gameScene.getUINodes().forEach(node -> {
+//            node.setLayoutX(player.getRightX() - (HEALTH_BAR_WIDTH / 2));
+//            node.setLayoutY(player.getBottomY() - 10);
+//        });
+//
+//    }
 
     public void updateZ() {
         gameScene.getUINodes().get(0).setTranslateZ(-5);
@@ -52,20 +56,24 @@ public class UIManager {
 //        healthBar.setVisible(false);
 //        healthBarBorder.setVisible(false);
 
-        ObservableValue<Double> healthBarX = player.xProperty().subtract((HEALTH_BAR_WIDTH - healthBarOffsetW) / 2).add(player.getWidth() / 2).asObject();
-        ObservableValue<Double> healthBarY = player.yProperty().add(player.getHeight()).add(10).add(healthBarOffsetH / 2).asObject();
+//        ObservableValue<Double> healthBarX = player.xProperty().subtract((HEALTH_BAR_WIDTH - healthBarOffsetW) / 2).add(player.getWidth() / 2).asObject();
+//        ObservableValue<Double> healthBarY = player.yProperty().add(player.getHeight()).add(10).add(healthBarOffsetH / 2).asObject();
+//
+//        ObservableValue<Double> healthBarBorderX = player.xProperty().subtract(HEALTH_BAR_WIDTH / 2).add(player.getWidth() / 2).asObject();
+//        ObservableValue<Double> healthBarBorderY = player.yProperty().add(player.getHeight()).add(10).asObject();
 
-        ObservableValue<Double> healthBarBorderX = player.xProperty().subtract(HEALTH_BAR_WIDTH / 2).add(player.getWidth() / 2).asObject();
-        ObservableValue<Double> healthBarBorderY = player.yProperty().add(player.getHeight()).add(10).asObject();
 
-
-        healthBar.layoutXProperty().bind(healthBarX);
-        healthBar.layoutYProperty().bind(healthBarY);
+//        healthBar.layoutXProperty().bind(healthBarX);
+//        healthBar.layoutYProperty().bind(healthBarY);
+        healthBar.layoutXProperty().setValue((getAppWidth() / 2) - (HEALTH_BAR_WIDTH - healthBarOffsetW) / 2 + (player.getWidth() / 2));
+        healthBar.layoutYProperty().setValue(getAppHeight() / 2 + player.getHeight() + 10 + (healthBarOffsetH / 2));
         healthBar.setTranslateZ(5);
 
-        healthBarBorder.layoutXProperty().bind(healthBarBorderX);
-        healthBarBorder.layoutYProperty().bind(healthBarBorderY);
-        healthBarBorder.setTranslateZ(10);
+//        healthBarBorder.layoutXProperty().bind(healthBarBorderX);
+//        healthBarBorder.layoutYProperty().bind(healthBarBorderY);
+        healthBarBorder.layoutXProperty().setValue((getAppWidth() / 2) - HEALTH_BAR_WIDTH / 2 + (player.getWidth() / 2));
+        healthBarBorder.layoutYProperty().setValue(getAppHeight() / 2 + player.getHeight() + 10);
+//        healthBarBorder.setTranslateZ(10);
 
 
         gameScene.addUINodes(healthBarBorder, healthBar);
