@@ -38,11 +38,17 @@ public class GameEntityFactory implements EntityFactory {
 
     @Spawns("bullet")
     public Entity newBullet(SpawnData data) {
+        var view = new Rectangle(30, 3, Color.LIGHTBLUE);
+        view.setStroke(Color.BLUE);
+        view.setArcWidth(15);
+        view.setArcHeight(10);
+
+
         return entityBuilder(data)
                 .type(EntityType.BULLET)
-                .viewWithBBox(new Rectangle(10, 2, Color.BLUE))
+                .viewWithBBox(view)
                 .with(new CollidableComponent(true))
-                .with(new ProjectileComponent(new Point2D(0, -1), 300))
+                .with(new ProjectileComponent(new Point2D((Double) data.getData().get("mouseX"), (Double) data.getData().get("mouseY")), 300))
                 .build();
     }
 

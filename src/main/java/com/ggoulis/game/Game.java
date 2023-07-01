@@ -5,15 +5,12 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
 
-import com.almasb.fxgl.app.scene.StartupScene;
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
-import com.sun.media.jfxmedia.logging.Logger;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
@@ -137,7 +134,10 @@ public class Game extends GameApplication {
         getInput().addAction(new UserAction("Shoot") {
             @Override
             protected void onActionBegin() {
-                getGameWorld().spawn("bullet", getInput().getMouseXWorld(), getAppHeight() - 10);
+                SpawnData data = new SpawnData(player.getX(), player.getY());
+                data.put("mouseX", getInput().getMouseXWorld() - player.getX());
+                data.put("mouseY", getInput().getMouseYWorld() - player.getY());
+                getGameWorld().spawn("bullet", data);
             }
         }, MouseButton.PRIMARY);
 
