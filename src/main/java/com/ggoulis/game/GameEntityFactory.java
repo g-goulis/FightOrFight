@@ -6,11 +6,11 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
-import com.almasb.fxgl.physics.BoundingShape;
-import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import com.ggoulis.game.components.EnemyComponent;
+import com.ggoulis.game.components.PlayerComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,6 +24,7 @@ public class GameEntityFactory implements EntityFactory {
     public Entity newPlayer(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
+        physics.setFixtureDef(new FixtureDef().friction(0.0f));
 //        physics.setFixtureDef(new FixtureDef().density(0.3f).restitution(1.0f));
 //        physics.setOnPhysicsInitialized(() -> physics.setLinearVelocity(5 * 60, -5 * 60));
 
@@ -61,6 +62,7 @@ public class GameEntityFactory implements EntityFactory {
                 .viewWithBBox(new Rectangle(40, 40, Color.RED))
                 .with(new CollidableComponent(true))
                 .with(new PhysicsComponent())
+                .with(new EnemyComponent())
                 .build();
     }
 
@@ -69,7 +71,8 @@ public class GameEntityFactory implements EntityFactory {
     public Entity newRectangle(SpawnData data) {
 
         return entityBuilder(data)
-                .viewWithBBox(new Rectangle(30, 30))
+                .type(EntityType.WALL)
+                .viewWithBBox(new Rectangle(50, 50))
                 .with(new PhysicsComponent())
                 .with(new CollidableComponent(true))
                 .build();
@@ -78,7 +81,7 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns("")
     public Entity newEmpty(SpawnData data) {
         return entityBuilder(data)
-                .view(new Rectangle(30, 30, Color.RED))
+                .view(new Rectangle(50, 50, Color.RED))
                 .build();
     }
 

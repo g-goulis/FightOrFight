@@ -5,6 +5,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -42,8 +43,7 @@ public class UIManager {
 //    }
 
     public void updateZ() {
-        gameScene.getUINodes().get(0).setTranslateZ(-5);
-        gameScene.getUINodes().get(1).setTranslateZ(-1);
+        GridPane pane = new GridPane();
     }
 
     public void drawHealthBar() {

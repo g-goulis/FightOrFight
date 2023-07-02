@@ -1,5 +1,5 @@
 package com.ggoulis.game;
 
 public enum EntityType {
-    PLAYER, ENEMY, BULLET
+    PLAYER, ENEMY, BULLET, WALL
 }

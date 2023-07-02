@@ -11,8 +11,7 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.text.TextLevelLoader;
 import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.PhysicsWorld;
+import com.ggoulis.game.components.PlayerComponent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
@@ -31,6 +30,8 @@ public class Game extends GameApplication {
 
     private UIManager uiManager;
 
+    private PhysicsManager physicsManager;
+
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setTitle("FightOrFIGHT");
@@ -38,6 +39,7 @@ public class Game extends GameApplication {
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setWidth(800);
         gameSettings.setHeight(800);
+//        gameSettings.setProfilingEnabled(true);
 
         gameSettings.setSceneFactory(new SceneFactory() {
             @NotNull
@@ -140,6 +142,18 @@ public class Game extends GameApplication {
             }
         }, KeyCode.A);
 
+        getInput().addAction(new UserAction("Dash") {
+            @Override
+            protected void onAction() {
+                playerComponent.dash();
+            }
+
+            @Override
+            protected void onActionEnd() {
+//                playerComponent.stop();
+            }
+        }, KeyCode.SPACE);
+
         getInput().addAction(new UserAction("Shoot") {
             @Override
             protected void onActionBegin() {
@@ -154,18 +168,8 @@ public class Game extends GameApplication {
 
     @Override
     protected void initPhysics() {
-        PhysicsWorld physicsWorld = getPhysicsWorld();
-        physicsWorld.setGravity(0, 0);
-
-        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.BULLET, EntityType.ENEMY) {
-            @Override
-            protected void onCollisionBegin(Entity bullet, Entity enemy) {
-                bullet.removeFromWorld();
-                enemy.removeFromWorld();
-
-                inc("enemies", -1);
-            }
-        });
+        physicsManager = new PhysicsManager(getPhysicsWorld());
+        physicsManager.initSettings();
     }
 
     @Override
