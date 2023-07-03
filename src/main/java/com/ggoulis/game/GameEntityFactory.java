@@ -9,6 +9,7 @@ import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import com.ggoulis.game.components.AnimationComponent;
 import com.ggoulis.game.components.EnemyComponent;
 import com.ggoulis.game.components.PlayerComponent;
 import javafx.geometry.Point2D;
@@ -31,10 +32,11 @@ public class GameEntityFactory implements EntityFactory {
         return entityBuilder()
                 .from(data)
                 .type(EntityType.PLAYER)
-                .viewWithBBox(new Rectangle(20, 60, Color.LIGHTGRAY))
+//                .viewWithBBox(new Rectangle(20, 60, Color.LIGHTGRAY))
                 .with(physics)
                 .with(new CollidableComponent(true))
                 .with(new PlayerComponent())
+                .with(new AnimationComponent())
                 .build();
     }
 

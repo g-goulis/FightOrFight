@@ -19,7 +19,7 @@ public class PlayerComponent extends GeneralComponent {
     private PhysicsComponent physics;
 
     public PlayerComponent() {
-        super(420, 100, 10);
+        super(100, 100, 10);
     }
 
     public void up() {

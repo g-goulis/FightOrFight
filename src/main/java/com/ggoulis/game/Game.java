@@ -10,6 +10,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.text.TextLevelLoader;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.input.UserAction;
 import com.ggoulis.game.components.PlayerComponent;
 import javafx.scene.input.KeyCode;
@@ -61,13 +62,15 @@ public class Game extends GameApplication {
         getGameWorld().addEntityFactory(new GameEntityFactory());
 
 
-        Level level = getAssetLoader().loadLevel("level.txt", new TextLevelLoader(30, 30, '0'));
+//        Level level = getAssetLoader().loadLevel("level.txt", new TextLevelLoader(30, 30, '0'));
+        Level level = getAssetLoader().loadLevel("Sample1.tmx", new TMXLevelLoader());
 
         getGameWorld().setLevel(level);
 
         player = getGameWorld().spawn("player", getAppHeight() / 2, getAppWidth() / 2);
         playerComponent = player.getComponent(PlayerComponent.class);
         getGameScene().getViewport().bindToEntity(player, getAppHeight() / 2, getAppWidth() / 2);
+        getGameScene().getViewport().setZoom(1.2);
 
         getGameTimer().runAtInterval(() -> {
 
@@ -176,7 +179,7 @@ public class Game extends GameApplication {
     protected void initUI() {
         uiManager = new UIManager(getGameScene(), player);
 
-        uiManager.drawHealthBar();
+//        uiManager.drawHealthBar();
 
         uiManager.setVisible(true);
     }
